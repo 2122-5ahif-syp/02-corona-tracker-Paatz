@@ -5,11 +5,8 @@ import at.htl.entities.Person;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
 import java.sql.Time;
 import java.sql.Timestamp;
 
@@ -25,17 +22,16 @@ public class PersonResource {
     }*/
 
     @POST
-    public Response createPerson(
-        @FormParam("firstName") String firstName,
-        @FormParam("lastName") String lastName,
-        @FormParam("email") String email,
-        @FormParam("time") Timestamp time
-    ){
-        Person person = new Person();
-        person.setFirstName(firstName);
-        person.setLastName(lastName);
-        person.setEmail(email);
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createPerson(Person person, @Context UriInfo info){
         person.setTime( new Timestamp(System.currentTimeMillis()));
+        person = personRepository.save(person);
+
+        UriBuilder uriBuilder = info
+                .getAbsolutePathBuilder()
+                .path(Long.toString(person.getId()));
+
         return Response.status(200).entity(person).build();
     }
 }

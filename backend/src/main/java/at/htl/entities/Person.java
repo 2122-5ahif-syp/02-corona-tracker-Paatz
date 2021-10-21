@@ -16,6 +16,8 @@ public class Person {
     private String lastName;
     @Column(name = "EMAIL")
     private String email;
+    @Column(name = "PHONENUMBER")
+    private String phoneNumber;
     @Column(name = "TIME")
     private Timestamp time;
 
